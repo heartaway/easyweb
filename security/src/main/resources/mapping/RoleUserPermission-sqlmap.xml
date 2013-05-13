@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="GB2312"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+
+<sqlMap>
+
+	<typeAlias alias="RoleUserPermission"
+		type="com.taobao.easyweb.security.domain.RoleUserPermission" />
+
+	<resultMap id="RoleUserPermissionMap" class="RoleUserPermission">
+		<result property="id" column="ID" />
+		<result property="type" column="type" />
+		<result property="permissionId" column="perm_id" />
+		<result property="roleOrUserId" column="role_user_id" />
+		<result property="status" column="status" />
+		<result property="reason" column="reason" />
+		<result property="gmtCreate" column="GMT_CREATE" jdbcType="DATETIME" />
+		<result property="gmtModified" column="GMT_MODIFIED" jdbcType="DATETIME" />
+	</resultMap>
+
+	<sql id="selectFieldA">
+		<![CDATA[
+		SELECT ID,type,perm_id,role_user_id,status,reason,GMT_CREATE,GMT_MODIFIED FROM ew_role_user_perm
+		]]>
+	</sql>
+
+	<select id="userPermissionDAO.queryUserPermissions" parameterClass="int" resultClass="int">
+		<![CDATA[
+			SELECT perm_id FROM ew_role_user_perm where type = 1 and role_user_id = #userId#
+		]]>
+	</select>
+	
+	<select id="rolePermissionDAO.queryRolePermissions" parameterClass="int" resultClass="int">
+		<![CDATA[
+			SELECT perm_id FROM ew_role_user_perm where type = 2 and role_user_id = #roleId#
+		]]>
+	</select>
+	
+	<select id="rolePermissionDAO.queryRolesPermissions" parameterClass="list" resultClass="int">
+		<![CDATA[
+			select perm_id from ew_role_user_perm where type = 2 and role_user_id in
+		]]>
+		<iterate conjunction="," close=")" open="(">
+			#ids[]#
+		</iterate>
+	</select>
+	
+	
+
+	<delete id="roleUserPermissionDAO.delete" parameterClass="RoleUserPermission">
+    <![CDATA[
+        DELETE FROM ew_role_user_perm
+        WHERE perm_id = #permissionId# and role_user_id= #roleOrUserId# and type=#type#
+ 	]]>
+	</delete>
+
+	<insert id="roleUserPermissionDAO.save" parameterClass="RoleUserPermission">
+	    <![CDATA[
+        INSERT INTO ew_role_user_perm
+        ( type,  
+          perm_id,
+          role_user_id,
+          status,
+          reason,
+          GMT_CREATE,
+          GMT_MODIFIED
+        ) VALUES (
+          #type#,
+          #permissionId#,
+          #roleOrUserId#,
+          #status#,
+          #reason#,
+		  now(),
+		  now()
+        )
+         ]]>
+	</insert>
+
+</sqlMap>

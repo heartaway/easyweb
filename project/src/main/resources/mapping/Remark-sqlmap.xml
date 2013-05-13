@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="GB2312"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+
+<sqlMap>
+
+	<typeAlias alias="Remark" type="com.taobao.easyweb.remark.Remark" />
+	<resultMap id="RemarkMap" class="Remark">
+		<result property="id" column="id" />
+		<result property="parentId" column="parent_id" />
+		<result property="title" column="title" />
+		<result property="category" column="category" />
+		<result property="type" column="type" />
+		<result property="status" column="status" />
+		<result property="creator" column="creator" />
+		<result property="content" column="content" />
+		<result property="outerBizId" column="outer_biz_id" />
+		<result property="outerBiz" column="outer_Biz" />
+		<result property="gmtCreate" column="GMT_CREATE" jdbcType="DATETIME" />
+		<result property="gmtModified" column="GMT_MODIFIED" jdbcType="DATETIME" />
+	</resultMap>
+
+	<sql id="remarkDAO.selectField">
+		<![CDATA[
+		SELECT id,parent_id,title,category,type,status,creator,outer_biz_id,outer_Biz,content,GMT_CREATE,GMT_MODIFIED FROM ew_remark
+		]]>
+	</sql>
+
+	<select id="remarkDAO.queryById" parameterClass="int" resultMap="RemarkMap">
+		<include refid="remarkDAO.selectField" />
+		<![CDATA[
+			where id = #id#
+		]]>
+	</select>
+
+	<select id="remarkDAO.queryRootCount" resultClass="int">
+		<![CDATA[
+			select count(1) from ew_code_file
+		]]>
+		<dynamic prepend="where">
+			<isNotNull prepend="and" property="type">
+				type = #type#
+			</isNotNull>
+		</dynamic>
+	</select>
+
+	<select id="remarkDAO.queryRootRemark" resultMap="RemarkMap">
+		<include refid="remarkDAO.selectField" />
+		<dynamic prepend="where">
+			<isNotNull prepend="and" property="type">
+				type = #type#
+			</isNotNull>
+		</dynamic>
+		<![CDATA[
+			limit #start#,#limit#
+		]]>
+	</select>
+	
+	<select id="remarkDAO.queryRemarks" resultMap="RemarkMap">
+		<include refid="remarkDAO.selectField" />
+		<dynamic prepend="where">
+			<isNotNull prepend="and" property="type">
+				type = #type#
+			</isNotNull>
+			<isNotNull prepend="and" property="outerBizId">
+				outer_biz_id = #outerBizId#
+			</isNotNull>
+			<isNotNull prepend="and" property="status">
+				status = #status#
+			</isNotNull>
+			<isNull prepend="and" property="status">
+				status >= 0
+			</isNull>
+			<isNotNull prepend="and" property="outerBiz">
+				outer_biz = #outerBiz#
+			</isNotNull>
+		</dynamic>
+		<![CDATA[
+			order by gmt_modified desc
+		]]>
+	</select>
+	
+	<select id="remarkDAO.queryChildrenRemarks" resultMap="RemarkMap"
+		parameterClass="int">
+		<include refid="remarkDAO.selectField" />
+		<![CDATA[
+			where parent_id = #parentId# and status >= 0 order by gmt_modified desc
+		]]>
+	</select>
+
+
+
+	<select id="remarkDAO.queryTitleLike" resultMap="RemarkMap">
+		<include refid="remarkDAO.selectField" />
+		<![CDATA[
+			where title like '%$title$%'
+		]]>
+	</select>
+
+
+
+	
+
+	<update id="remarkDAO.update" parameterClass="Remark">
+		<![CDATA[
+        update ew_remark set gmt_modified=now()
+	 	]]>
+		<isNotNull prepend="," property="title">
+			title = #title#
+		</isNotNull>
+		<isNotNull prepend="," property="type">
+			type = #type#
+		</isNotNull>
+		<isNotNull prepend="," property="status">
+			status = #status#
+		</isNotNull>
+		<isNotNull prepend="," property="content">
+			content = #content#
+		</isNotNull>
+	 	<![CDATA[
+	        WHERE ID = #id#
+	 	]]>
+	</update>
+
+	<insert id="remarkDAO.insert" parameterClass="Remark">
+	    <![CDATA[
+        INSERT INTO ew_remark
+        ( title,  
+          parent_id,
+          type,
+          status,
+          content,
+          creator,
+          category,
+          outer_biz,
+          outer_biz_id,
+          GMT_CREATE,
+          GMT_MODIFIED
+        ) VALUES (
+          #title#,
+          #parentId#,
+          #type#,
+          #status#,
+          #content#,
+          #creator#,
+          #category#,
+          #outerBiz#,
+          #outerBizId#,
+		  now(),
+		  now()
+        )
+         ]]>
+	</insert>
+
+	<delete id="remarkDAO.deleteById">
+    <![CDATA[
+        DELETE FROM ew_remark WHERE ID = #id#
+ 	]]>
+	</delete>
+
+</sqlMap>

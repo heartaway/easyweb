@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="GB2312"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+
+<sqlMap>
+
+    <typeAlias alias="SiteConfig" type="com.taobao.usp.domain.SiteConfig"/>
+    <resultMap id="SiteConfigMap" class="SiteConfig">
+        <result property="id" column="id"/>
+        <result property="key" column="config_key"/>
+        <result property="value" column="config_value"/>
+        <result property="siteCategory" column="site_category"/>
+        <result property="moduleId" column="module_id"/>
+        <result property="gmtCreate" column="GMT_CREATE" jdbcType="DATETIME"/>
+        <result property="gmtModified" column="GMT_MODIFIED" jdbcType="DATETIME"/>
+    </resultMap>
+
+    <sql id="siteConfigDAO.selectField">
+        <![CDATA[
+		SELECT id,config_key,config_value,site_category,module_id,GMT_CREATE,GMT_MODIFIED FROM usp_site_config
+		]]>
+    </sql>
+
+    <select id="siteConfigDAO.queryById" parameterClass="int" resultMap="SiteConfigMap">
+        <include refid="siteConfigDAO.selectField"/>
+        <![CDATA[
+			where id = #id#
+		]]>
+    </select>
+
+    <select id="siteConfigDAO.query" resultMap="SiteConfigMap">
+        <include refid="siteConfigDAO.selectField"/>
+        <dynamic prepend="where">
+            <isNotNull prepend="and" property="siteCategory">
+                site_category = #siteCategory#
+            </isNotNull>
+            <isNotNull prepend="and" property="key">
+                config_key = #key#
+            </isNotNull>
+            <isNotNull prepend="and" property="moduleId">
+                module_id = #moduleId#
+            </isNotNull>
+            <isNotNull prepend="and" property="id">
+                id=#id#
+            </isNotNull>
+        </dynamic>
+    </select>
+
+    <select id="siteConfigDAO.queryConfigSites" resultClass="int">
+        <![CDATA[
+            select DISTINCT site_category from usp_site_config
+        ]]>
+    </select>
+
+    <insert id="siteConfigDAO.insert" parameterClass="SiteConfig">
+        <![CDATA[
+        INSERT INTO usp_site_config
+        ( 
+          config_key,
+          config_value,
+          site_category,
+          module_id,
+          GMT_CREATE,
+          GMT_MODIFIED
+        ) VALUES (
+          #key#,
+          #value#,
+          #siteCategory#,
+          #moduleId#,
+		  now(),
+		  now()
+        )
+         ]]>
+    </insert>
+
+    <update id="siteConfigDAO.update" parameterClass="SiteConfig">
+        <![CDATA[
+            update usp_site_config set gmt_modified = now()
+        ]]>
+        <isNotNull prepend="," property="value">
+            config_value = #value#
+        </isNotNull>
+        <![CDATA[
+            where id=#id#
+        ]]>
+    </update>
+    <delete id="siteConfigDAO.delete">
+        <![CDATA[
+            delete from usp_site_config where id=#id#
+        ]]>
+    </delete>
+
+</sqlMap>

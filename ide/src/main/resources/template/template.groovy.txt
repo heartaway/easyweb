@@ -1,0 +1,15 @@
+package ${packageName}
+
+import com.taobao.easyweb.core.request.Page
+import com.taobao.easyweb.core.request.Param
+
+//请访问http://github.com/jim/easyweb查看帮助文档
+/**
+示例代码如下
+@Page(url="/demo/myPage.html" layout="../layout.vm")
+def myMethod(@Param("myParam")String myParam){
+	putContext("page",1)
+	return vm.render("myPage.vm")
+}
+
+*/

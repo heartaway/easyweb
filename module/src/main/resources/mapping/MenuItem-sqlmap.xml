@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="GB2312"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+
+<sqlMap>
+
+    <typeAlias alias="MenuItem" type="com.taobao.usp.domain.MenuItem"/>
+    <resultMap id="MenuItemMap" class="MenuItem">
+        <result property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="uri" column="uri"/>
+        <result property="param" column="param"/>
+        <result property="moduleId" column="module_id"/>
+        <result property="parentId" column="parent_id"/>
+        <result property="feature" column="feature"/>
+        <result property="description" column="description"/>
+        <result property="gmtCreate" column="GMT_CREATE" jdbcType="DATETIME"/>
+        <result property="gmtModified" column="GMT_MODIFIED" jdbcType="DATETIME"/>
+    </resultMap>
+
+    <sql id="menuItemDAO.selectField">
+        <![CDATA[
+		SELECT id,title,uri,param,feature,description,parent_id,module_id,GMT_CREATE,GMT_MODIFIED FROM usp_menuitem
+		]]>
+    </sql>
+
+    <select id="menuItemDAO.queryById" parameterClass="int" resultMap="MenuItemMap">
+        <include refid="menuItemDAO.selectField"/>
+        <![CDATA[
+			where id = #id#
+		]]>
+    </select>
+
+    <select id="menuItemDAO.queryAll" resultMap="MenuItemMap">
+        <include refid="menuItemDAO.selectField"/>
+    </select>
+
+    <select id="menuItemDAO.queryModuleTopMenus" resultMap="MenuItemMap">
+        <include refid="menuItemDAO.selectField"/>
+        <![CDATA[
+			where parent_id = 0 and module_id=#moduleId#
+		]]>
+    </select>
+    <select id="menuItemDAO.queryModuleMenus" resultMap="MenuItemMap">
+        <include refid="menuItemDAO.selectField"/>
+        <![CDATA[
+			where module_id=#moduleId#
+		]]>
+    </select>
+    <select id="menuItemDAO.queryChildren" resultMap="MenuItemMap">
+        <include refid="menuItemDAO.selectField"/>
+        <![CDATA[
+			where parent_id=#parentId#
+		]]>
+    </select>
+
+    <insert id="menuItemDAO.insert" parameterClass="MenuItem">
+        <![CDATA[
+        INSERT INTO usp_menuitem
+        ( 
+          title,
+          uri,
+          param,
+          feature,
+          parent_id,
+          module_id,
+          description,
+          GMT_CREATE,
+          GMT_MODIFIED
+        ) VALUES (
+          #title#,
+          #uri#,
+          #param#,
+          #feature#,
+          #parentId#,
+          #moduleId#,
+          #description#,
+		  now(),
+		  now()
+        )
+         ]]>
+    </insert>
+
+    <update id="menuItemDAO.update" parameterClass="MenuItem">
+        <![CDATA[
+            update usp_menuitem set gmt_modified = now()
+        ]]>
+        <isNotNull prepend="," property="title">
+            title = #title#
+        </isNotNull>
+        <isNotNull prepend="," property="uri">
+            uri = #uri#
+        </isNotNull>
+        <isNotNull prepend="," property="parentId">
+            parent_id = #parentId#
+        </isNotNull>
+        <isNotNull prepend="," property="param">
+            param = #param#
+        </isNotNull>
+        <isNotNull prepend="," property="description">
+            description = #description#
+        </isNotNull>
+        <![CDATA[
+            where id=#id#
+        ]]>
+    </update>
+
+    <delete id="menuItemDAO.delete" parameterClass="int">
+        <![CDATA[
+            delete from usp_menuitem where id = #id#
+        ]]>
+    </delete>
+
+</sqlMap>

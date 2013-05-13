@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="GB2312"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap>
+	<typeAlias alias="SiteModule" type="com.taobao.usp.domain.SiteModule" />
+	<resultMap id="SiteModuleMap" class="SiteModule">
+		<result property="id" column="id" />
+		<result property="moduleId" column="module_id" />
+		<result property="siteCategory" column="site_category" />
+		<result property="gmtCreate" column="GMT_CREATE" jdbcType="DATETIME" />
+		<result property="gmtModified" column="GMT_MODIFIED" jdbcType="DATETIME" />
+	</resultMap>
+
+	<sql id="siteModuleDAO.selectField">
+		<![CDATA[
+		SELECT id,module_id,site_category,GMT_CREATE,GMT_MODIFIED FROM usp_site_module
+		]]>
+	</sql>
+
+
+	<select id="siteModuleDAO.querySiteModules" parameterClass="int" resultMap="SiteModuleMap">
+        <include refid="siteModuleDAO.selectField" />
+		<![CDATA[
+			where site_category = #siteCategory#
+		]]>
+	</select>
+    <select id="siteModuleDAO.query" resultMap="SiteModuleMap" parameterClass="SiteModule">
+        <include refid="siteModuleDAO.selectField" />
+        <dynamic prepend="where">
+            <isNotNull prepend="and" property="siteCategory">
+                site_category = #siteCategory#
+            </isNotNull>
+            <isNotNull prepend="and" property="moduleId">
+                module_id = #moduleId#
+            </isNotNull>
+        </dynamic>
+    </select>
+
+
+	<insert id="siteModuleDAO.insert" parameterClass="SiteModule">
+	    <![CDATA[
+        INSERT INTO usp_site_module
+        ( module_id,
+          site_category,
+          GMT_CREATE,
+          GMT_MODIFIED
+        ) VALUES (
+          #moduleId#,
+          #siteCategory#,
+		  now(),
+		  now()
+        )
+         ]]>
+	</insert>
+    <delete id="siteModuleDAO.delete" parameterClass="SiteModule">
+        <![CDATA[
+            delete from usp_site_module where id = #id# and site_category=#siteCategory# and module_id=#moduleId#
+        ]]>
+    </delete>
+
+</sqlMap>

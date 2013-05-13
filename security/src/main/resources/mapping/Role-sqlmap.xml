@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="GB2312"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+
+<sqlMap>
+
+	<typeAlias alias="Role" type="com.taobao.easyweb.security.domain.Role" />
+
+	<resultMap id="RoleMap" class="Role">
+		<result property="id" column="ID" />
+		<result property="name" column="name" />
+		<result property="description" column="description" />
+		<result property="gmtCreate" column="GMT_CREATE" jdbcType="DATETIME" />
+		<result property="gmtModified" column="GMT_MODIFIED" jdbcType="DATETIME" />
+	</resultMap>
+
+	<sql id="selectFieldRole">
+		<![CDATA[
+		SELECT ID,name,description,GMT_CREATE,GMT_MODIFIED FROM ew_role
+		]]>
+	</sql>
+
+	<select id="roleDAO.queryById" parameterClass="int" resultMap="RoleMap">
+		<include refid="selectFieldRole" />
+		<![CDATA[
+			where id = #id#
+		]]>
+	</select>
+	
+	<select id="roleDAO.queryByIds" parameterClass="list" resultMap="RoleMap">
+		<include refid="selectFieldRole" />
+		<![CDATA[
+			where id in
+		]]>
+		<iterate conjunction="," close=")" open="(">
+			#ids[]#
+		</iterate>
+	</select>
+	<select id="roleDAO.queryRoleUsers" parameterClass="int" resultClass="int">
+		<![CDATA[
+			select user_id from ew_user_role where role_id=#roleId#
+		]]>
+	</select>
+	
+	<select id="roleDAO.queryCount" resultClass="int">
+		<![CDATA[
+			select count(1) from ew_role
+		]]>
+	</select>
+
+	<select id="roleDAO.queryByName" parameterClass="string"
+		resultMap="RoleMap">
+		<include refid="selectFieldRole" />
+		<![CDATA[
+			where name = #name#
+		]]>
+	</select>
+
+	<select id="roleDAO.queryAll" resultMap="RoleMap" parameterClass="map">
+		<include refid="selectFieldRole" />
+		<![CDATA[
+			limit #start#,#limit#
+		]]>
+	</select>
+
+	<insert id="roleDAO.save" parameterClass="Role">
+	    <![CDATA[
+        INSERT INTO ew_role
+        ( name,  
+          description,
+          GMT_CREATE,
+          GMT_MODIFIED
+        ) VALUES (
+          #name#,
+          #description#,
+		  now(),
+		  now()
+        )
+         ]]>
+	</insert>
+	
+	<update id="roleDAO.update" parameterClass="Role">
+		<![CDATA[
+        	update ew_role set GMT_MODIFIED = now() ,name=#name#,description=#description#where id=#id#
+         ]]>
+	</update>
+
+	<insert id="roleDAO.applyPermission" parameterClass="map">
+	    <![CDATA[
+        INSERT INTO ew_role_perm
+        ( role_id,
+          perm_id  
+        ) VALUES (
+          #roleId#,
+          #permissionId#
+        )
+         ]]>
+	</insert>
+
+	<delete id="ruleDAO.deleteById">
+    <![CDATA[
+        DELETE FROM ew_role
+        WHERE ID = #id#
+ 	]]>
+	</delete>
+
+</sqlMap>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+                 http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+               http://www.springframework.org/schema/context 
+                 http://www.springframework.org/schema/context/spring-context-2.5.xsd"
+	default-autowire="byName">
+
+	<import resource="classpath:easyweb_bean.xml"/>
+	<import resource="classpath:easyweb_persistence.xml"/>
+	<bean id="localBean" class="com.taobao.easyweb.core.bean.LocalBean">
+		<property name="localBeans">
+			<map>
+				<entry key="ewProjectManager" value="ewProjectManager"></entry>
+				<entry key="ewTaskManager" value="ewTaskManager"></entry>
+				<entry key="ewRemarkManager" value="ewRemarkManager"></entry>
+				<entry key="ewInstanceManager" value="ewInstanceManager"></entry>
+				<entry key="ewAppManager" value="ewAppManager"></entry>
+
+                <entry key="moduleManager" value="moduleManager"></entry>
+                <entry key="menuManager" value="menuManager"></entry>
+                <entry key="configManager" value="configManager"></entry>
+			</map>
+		</property>
+	</bean>
+</beans>

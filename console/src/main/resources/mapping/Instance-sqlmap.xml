@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="GB2312"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap>
+	<typeAlias alias="Instance" type="com.taobao.easyweb.console.instance.domain.Instance" />
+	<resultMap id="InstanceMap" class="Instance">
+		<result property="id" column="id" />
+		<result property="ip" column="ip" />
+		<result property="groupId" column="group_id" />
+		<result property="name" column="name" />
+		<result property="lastCheck" column="last_check" />
+		<result property="status" column="status" />
+		<result property="gmtCreate" column="GMT_CREATE" jdbcType="DATETIME" />
+		<result property="gmtModified" column="GMT_MODIFIED" jdbcType="DATETIME" />
+	</resultMap>
+
+	<sql id="instanceDAO.selectField">
+		<![CDATA[
+		SELECT id,name,ip,group_id,last_check,status,GMT_CREATE,GMT_MODIFIED FROM ew_console_inst
+		]]>
+	</sql>
+
+	<select id="instanceDAO.queryById" parameterClass="int" resultMap="InstanceMap">
+		<include refid="instanceDAO.selectField" />
+		<![CDATA[
+			where id = #id#
+		]]>
+	</select>
+	
+
+	<select id="instanceDAO.queryPage" resultMap="InstanceMap">
+		<include refid="instanceDAO.selectField" />
+		<![CDATA[
+			limit #start#,#limit#
+		]]>
+	</select>
+	<select id="instanceDAO.queryCount" resultClass="int">
+		<![CDATA[
+			select count(1) from ew_console_inst
+		]]>
+	</select>
+	
+	<select id="instanceDAO.query" resultMap="InstanceMap" parameterClass="Instance">
+		<include refid="instanceDAO.selectField" />
+		<dynamic prepend="where">
+			<isNotNull prepend="," property="name">
+				name = #name#
+			</isNotNull>
+			<isNotNull prepend="," property="status">
+				status = #status#
+			</isNotNull>
+			<isNotNull prepend="," property="ip">
+				ip = #ip#
+			</isNotNull>
+			<isNotNull prepend="," property="id">
+				id = #id#
+			</isNotNull>
+			<isNotNull prepend="," property="groupId">
+				group_id = #groupId#
+			</isNotNull>
+		</dynamic>
+	</select>
+
+	<update id="instanceDAO.update" parameterClass="Instance">
+		<![CDATA[
+        	update ew_console_inst set gmt_modified=now()
+	 	]]>
+		<isNotNull prepend="," property="name">
+			name = #name#
+		</isNotNull>
+		<isNotNull prepend="," property="groupId">
+			group_id = #groupId#
+		</isNotNull>
+		<isNotNull prepend="," property="status">
+			status = #status#
+		</isNotNull>
+	 	<![CDATA[
+	        WHERE ID = #id#
+	 	]]>
+	</update>
+	<insert id="instanceDAO.insert" parameterClass="Instance">
+	    <![CDATA[
+        INSERT INTO ew_console_inst
+        ( 
+          ip,
+          name,
+          status,
+          group_id,
+          last_check,
+          GMT_CREATE,
+          GMT_MODIFIED
+        ) VALUES (
+          #ip#,
+          #name#,
+          #status#,
+          #groupId#,
+          #lastCheck#,
+		  now(),
+		  now()
+        )
+         ]]>
+	</insert>
+	<delete id="instanceDAO.delete">
+		<![CDATA[
+			delete from ew_console_inst where id=#id#
+		]]>
+	</delete>
+
+
+</sqlMap>

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="GB2312"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+
+<sqlMap>
+
+	<typeAlias alias="Permission"
+		type="com.taobao.easyweb.security.domain.Permission" />
+
+	<resultMap id="PermissionMap" class="Permission">
+		<result property="id" column="ID" />
+		<result property="key" column="perm_key" />
+		<result property="description" column="description" />
+		<result property="gmtCreate" column="GMT_CREATE" jdbcType="DATETIME" />
+		<result property="gmtModified" column="GMT_MODIFIED" jdbcType="DATETIME" />
+	</resultMap>
+
+	<sql id="selectFieldPerm">
+		<![CDATA[
+		SELECT ID,perm_key,description,GMT_CREATE,GMT_MODIFIED FROM ew_permission
+		]]>
+	</sql>
+
+	<select id="permissionDAO.queryById" parameterClass="int"
+		resultMap="PermissionMap">
+		<include refid="selectFieldPerm" />
+		<![CDATA[
+			where id = #id#
+		]]>
+	</select>
+	
+	<select id="permissionDAO.queryCount"
+		resultClass="int">
+		<![CDATA[
+			select count(1) from ew_permission
+		]]>
+	</select>
+	
+	<select id="permissionDAO.queryPages" resultMap="PermissionMap">
+		<include refid="selectFieldPerm" />
+		<![CDATA[
+			limit #start#,#limit#
+		]]>
+	</select>
+
+	<select id="permissionDAO.queryByKey" parameterClass="string"
+		resultMap="PermissionMap">
+		<include refid="selectFieldPerm" />
+		<![CDATA[
+			where perm_key = #key#
+		]]>
+	</select>
+
+	<select id="permissionDAO.queryMapByIds" resultMap="PermissionMap" parameterClass="list">
+		<include refid="selectFieldPerm" />
+		<![CDATA[
+			where id in
+		]]>
+		<iterate conjunction="," open="(" close=")" >
+			#ids[]#
+		</iterate>
+	</select>
+
+	<insert id="permissionDAO.save" parameterClass="Permission">
+	    <![CDATA[
+        INSERT INTO ew_permission
+        ( ID,
+          perm_key,  
+          description,
+          GMT_CREATE,
+          GMT_MODIFIED
+        ) VALUES (
+          #id#,
+          #key#,
+          #description#,
+		  now(),
+		  now()
+        )
+         ]]>
+	</insert>
+
+	<delete id="permissionDAO.deleteById">
+    <![CDATA[
+        DELETE FROM ew_permission
+        WHERE ID = #id#
+ 	]]>
+	</delete>
+
+</sqlMap>

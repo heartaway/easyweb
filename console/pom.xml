@@ -1,0 +1,60 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<parent>
+		<groupId>com.taobao</groupId>
+		<artifactId>parent</artifactId>
+		<version>1.0.2</version>
+	</parent>
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.taobao.easyweb</groupId>
+	<artifactId>easyweb-console</artifactId>
+	<version>3.0.0-SNAPSHOT</version>
+	<description>
+		easyweb监控模块，支持本机监控，集群监控（手动配置对应的ip）：
+		1、本机监控信息
+		2、集群监控信息
+		3、模块推送等等
+	</description>
+	<developers>
+		<developer>
+			<name>jim</name>
+			<email>shantong@taobao.com</email>
+		</developer>
+	</developers>
+	<dependencies>
+		<dependency>
+			<groupId>com.taobao.easyweb</groupId>
+			<artifactId>easyweb-core</artifactId>
+			<version>3.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>2.4</version>
+			<scope>provided</scope>
+
+
+		</dependency>
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>20041127.091804</version>
+		</dependency>
+
+	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+					<encoding>GBK</encoding>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

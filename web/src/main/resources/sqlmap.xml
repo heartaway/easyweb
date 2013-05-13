@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="GBK"?>
+<!DOCTYPE sqlMapConfig PUBLIC "-//apache.org//DTD SQL Map Config 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-config-2.dtd">
+<sqlMapConfig>
+	<settings cacheModelsEnabled="false" enhancementEnabled="false"
+		lazyLoadingEnabled="false" maxRequests="3000" maxSessions="3000"
+		maxTransactions="3000" useStatementNamespaces="false" />
+
+	<sqlMap resource="mapping/Permission-sqlmap.xml" />
+	<sqlMap resource="mapping/Role-sqlmap.xml" />
+	<sqlMap resource="mapping/RoleUserPermission-sqlmap.xml" />
+	<sqlMap resource="mapping/User-sqlmap.xml" />
+	<sqlMap resource="mapping/Site-sqlmap.xml" />
+	<sqlMap resource="mapping/CodeFile-sqlmap.xml" />
+	<sqlMap resource="mapping/CodeVersion-sqlmap.xml" />
+	<sqlMap resource="mapping/Remark-sqlmap.xml" />
+	<sqlMap resource="mapping/Project-sqlmap.xml" />
+	<sqlMap resource="mapping/Task-sqlmap.xml" />
+	<sqlMap resource="mapping/UserTask-sqlmap.xml" />
+</sqlMapConfig>

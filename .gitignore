@@ -1,0 +1,8 @@
+*.svn
+.project
+.classes
+*.iml
+.settings
+target
+.classpath
+config.client.*

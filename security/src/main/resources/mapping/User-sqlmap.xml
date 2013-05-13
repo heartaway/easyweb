@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="GB2312"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+
+<sqlMap>
+
+	<typeAlias alias="User" type="com.taobao.easyweb.security.domain.User" />
+
+	<resultMap id="UserMap" class="User">
+		<result property="id" column="ID" />
+		<result property="name" column="name" />
+		<result property="password" column="pass" />
+		<result property="gmtCreate" column="GMT_CREATE" jdbcType="DATETIME" />
+		<result property="gmtModified" column="GMT_MODIFIED" jdbcType="DATETIME" />
+	</resultMap>
+
+	<sql id="selectFieldUser">
+		<![CDATA[
+		SELECT ID,name,pass,GMT_CREATE,GMT_MODIFIED FROM ew_user
+		]]>
+	</sql>
+
+	<select id="userDAO.queryById" parameterClass="int" resultMap="UserMap">
+		<include refid="selectFieldUser" />
+		<![CDATA[
+			where id = #id#
+		]]>
+	</select>
+	
+	<select id="userDAO.queryByIds" parameterClass="int" resultMap="UserMap">
+		<include refid="selectFieldUser" />
+		<![CDATA[
+			where id in
+		]]>
+		<iterate conjunction="," close=")" open="(">
+			#ids[]#
+		</iterate>
+	</select>
+
+	<select id="userDAO.queryByName" parameterClass="string"
+		resultMap="UserMap">
+		<include refid="selectFieldUser" />
+		<![CDATA[
+			where name = #name#
+		]]>
+	</select>
+	
+	<select id="userDAO.queryAll" resultMap="UserMap" parameterClass="map">
+		<include refid="selectFieldUser" />
+		<![CDATA[
+			limit #start#,#limit#
+		]]>
+	</select>
+	
+	<select id="userDAO.queryCount" resultClass="int">
+		<![CDATA[
+			select count(1) from ew_user
+		]]>
+	</select>
+
+	<select id="userDAO.queryUserRoles" parameterClass="int"
+		resultClass="int">
+		<![CDATA[
+			select role_id from ew_user_role where user_id = #userId#
+		]]>
+	</select>
+	<select id="userDAO.queryUserRole" parameterClass="map" resultClass="int">
+		<![CDATA[
+			select id from ew_user_role where user_id = #userId# and role_id=#roleId#
+		]]>
+	</select>
+	<insert id="userDAO.save" parameterClass="User">
+	    <![CDATA[
+        INSERT INTO ew_user
+        ( ID,
+          name,  
+          pass,
+          GMT_CREATE,
+          GMT_MODIFIED
+        ) VALUES (
+          #id#,
+          #name#,
+          #password#,
+		  now(),
+		  now()
+        )
+         ]]>
+	</insert>
+
+	<insert id="userDAO.addRole" parameterClass="map">
+	    <![CDATA[
+        INSERT INTO ew_user_role
+        ( user_id,  
+          role_id
+        ) VALUES (
+          #userId#,
+          #roleId#
+        )
+         ]]>
+	</insert>
+
+	<delete id="userDAO.deleteRole" parameterClass="map">
+    <![CDATA[
+        DELETE FROM ew_user_role
+        WHERE user_id = #userId# and role_id= #roleId#
+ 	]]>
+	</delete>
+
+	<delete id="userDAO.deleteById">
+    <![CDATA[
+        DELETE FROM ew_user
+        WHERE ID = #id#
+ 	]]>
+	</delete>
+
+</sqlMap>

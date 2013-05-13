@@ -1,0 +1,10 @@
+package ${packageName}
+
+import org.springframework.stereotype.Component;
+
+@Component
+class ${className}{
+
+	//your code here
+
+}

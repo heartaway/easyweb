@@ -1,0 +1,22 @@
+package ${packageName}
+
+import org.springframework.stereotype.Component;
+import com.taobao.easyweb.hsf.HSFInvokeHelper
+
+@Component
+class ${className}{
+
+	def hsfServiceName = "${serviceName}";
+    def hsfServiceVersion = "${serviceVersion}";
+    
+    /**
+    *your code like this
+    def queryBackyard(def a0){
+		def parameterTypes = ["com.taobao.backyard.client.domain.BackyardDO"] as String[];
+		def args = [a0] as Object[];
+		Object res = HSFInvokeHelper.invokeHsfService(hsfServiceName, hsfServiceVersion, "queryBackyard", parameterTypes, args);
+		return res;
+	}
+    **/
+    
+}

@@ -1,0 +1,6 @@
+com.taobao.easyweb.core.groovy.groovyobject.AppClassLoaderFactory
+com.taobao.easyweb.core.groovy.groovyobject.Cacher
+com.taobao.easyweb.core.app.AppContainer
+com.taobao.easyweb.core.request.RequestMapping
+com.taobao.easyweb.core.bean.BeanFactory
+com.taobao.easyweb.core.velocity.VmToolFactory
