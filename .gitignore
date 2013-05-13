@@ -6,3 +6,9 @@
 target
 .classpath
 config.client.*
+appapi
+hsf
+ide
+module
+deploy
+console
